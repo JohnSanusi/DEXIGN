@@ -6,7 +6,7 @@ const Hire = () => {
     name: "",
     email: "",
     phone: "",
-    type: "",
+    webtype: "",
     description: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -23,7 +23,7 @@ const Hire = () => {
     setStatus("idle");
 
     try {
-      const res = await fetch("https://your-backend-domain.com/api/hire", {
+      const res = await fetch("https://dexign-backend.onrender.com/api/hire", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -36,7 +36,7 @@ const Hire = () => {
           name: "",
           email: "",
           phone: "",
-          type: "",
+          webtype: "",
           description: "",
         });
       } else {
@@ -178,8 +178,8 @@ const Hire = () => {
             required
           />
           <select
-            name="type"
-            value={formData.type}
+            name="webtype"
+            value={formData.webtype}
             onChange={handleChange}
             className="border border-white/20 py-2.5 px-4 font-light text-base rounded-4xl w-full bg-gray-900 backdrop-blur-sm focus:shadow-[0_0_9px_rgba(34,211,238,0.7)] focus:outline-none"
             required
