@@ -1,63 +1,133 @@
-const Contact = () => {
-  return (
-    <section
-      id="contact"
-      className="p-6 flex flex-col justify-center items-center gap-4"
-    >
-      <div className="relative" data-aos="fade-down" data-aos-duration="1000">
-        <h2 className="text-3xl text-cyan-600 font-bold tracking-normal mb-7">
-          Contact US
-        </h2>
-      </div>
+import React, { useState } from "react";
 
-      <form className="flex flex-col gap-4 w-full md:w-[50%]">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
-          <div className="w-full">
-            <input
-              type="text"
-              placeholder="John Doe"
-              name="name"
-              id="name"
-              className="border border-white/20 py-2.5 px-4 font-light text-base rounded-4xl w-full bg-gray-900 backdrop-blur-sm  focus:shadow-[0_0_9px_rgba(34,21,238,0.7)] focus:outline-none"
-            />
+const Contact = () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    subject: "",
+    message: "",
+  });
+  const [alert, setAlert] = useState({ show: false, type: "", message: "" });
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setAlert({ show: false });
+
+    try {
+      const response = await fetch("https://dexign-backend.onrender.com/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) throw new Error("Server error");
+
+      setAlert({
+        show: true,
+        type: "success",
+        message: " Message sent successfully!",
+      });
+      setFormData({
+        name: "",
+        email: "",
+        subject: "",
+        message: "",
+      });
+    } catch (err) {
+      setAlert({
+        show: true,
+        type: "error",
+        message: "Failed to send message. Try again later.",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <section id="contact" className="py-16">
+      <div className="max-w-5xl mx-auto px-4">
+        <h2 className="text-3xl text-cyan-600 font-bold text-center mb-3">
+          Contact Us
+        </h2>
+        <p className="text-center text-gray-500 mb-8 max-w-2xl mx-auto">
+          Have a project in mind or just want to say hi? Drop us a message.
+        </p>
+
+        {/* Alert */}
+        {alert.show && (
+          <div
+            className={`text-center mb-6 py-3 rounded-lg font-semibold transition-all duration-300 ${
+              alert.type === "success"
+                ? "bg-green-600/20 text-green-400 border border-green-500 animate-fade-in"
+                : "bg-red-600/20 text-red-400 border border-red-500 animate-fade-in"
+            }`}
+          >
+            {alert.message}
           </div>
-          <div className="w-full">
-            <input
-              type="email"
-              placeholder="johndoe@gmail.com"
-              name="email"
-              id="email"
-              className="border border-white/20 py-2.5 px-4 font-light text-base rounded-4xl w-full bg-gray-900 backdrop-blur-sm focus:shadow-[0_0_9px_rgba(34,21,238,0.7)] focus:outline-none"
-            />
-          </div>
-        </div>
-        <div className="w-full">
+        )}
+
+        <form
+          onSubmit={handleSubmit}
+          className="grid md:grid-cols-2 gap-6 bg-gray-900 p-6 rounded-2xl shadow-lg border border-white/10 backdrop-blur-sm"
+        >
           <input
             type="text"
-            placeholder="Subject"
-            name="subject"
-            id="subject"
-            className="border border-white/20 py-2.5 px-4 font-light text-base rounded-4xl w-full bg-gray-900 backdrop-blur-sm focus:shadow-[0_0_9px_rgba(34,21,238,0.7)] focus:outline-none"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            placeholder="Full Name"
+            className="border border-white/20 py-2.5 px-4 font-light text-base rounded-4xl w-full bg-gray-900 focus:shadow-[0_0_9px_rgba(34,21,238,0.7)] focus:outline-none"
+            required
           />
-        </div>
-        <div>
+          <input
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            placeholder="Email Address"
+            className="border border-white/20 py-2.5 px-4 font-light text-base rounded-4xl w-full bg-gray-900 focus:shadow-[0_0_9px_rgba(34,21,238,0.7)] focus:outline-none"
+            required
+          />
+          <input
+            type="text"
+            name="subject"
+            value={formData.subject}
+            onChange={handleChange}
+            placeholder="Subject"
+            className="md:col-span-2 border border-white/20 py-2.5 px-4 font-light text-base rounded-4xl w-full bg-gray-900 focus:shadow-[0_0_9px_rgba(34,21,238,0.7)] focus:outline-none"
+            required
+          />
           <textarea
             name="message"
-            v-model="formData.message"
-            id="message"
-            col="30"
-            placeholder="Your Message...."
-            className="border border-white/20 py-2.5 px-4 font-light text-base rounded-xl w-full h-40 bg-gray-900 backdrop-blur-sm focus:shadow-[0_0_9px_rgba(34,21,238,0.7)] focus:outline-none "
+            value={formData.message}
+            onChange={handleChange}
+            placeholder="Your Message"
+            rows="4"
+            className="md:col-span-2 border border-white/20 py-2.5 px-4 font-light text-base rounded-2xl w-full bg-gray-900 focus:shadow-[0_0_9px_rgba(34,21,238,0.7)] focus:outline-none"
+            required
           ></textarea>
-        </div>
 
-        <button
-          type="submit"
-          className="text-md  bg-cyan-600 text-white font-semibold px-1 py-2 w-40 cursor-pointer rounded-md shadow-md hover:bg-cyan-500 hover:shadow-cyan-600 transition"
-        >
-          Send Message
-        </button>
-      </form>
+          <button
+            type="submit"
+            disabled={loading}
+            className={`text-md font-semibold px-1 py-2 w-40 rounded-md shadow-md transition ${
+              loading
+                ? "bg-cyan-800 text-gray-300 cursor-not-allowed"
+                : "bg-cyan-600 text-white hover:bg-cyan-500 hover:shadow-cyan-600 cursor-pointer"
+            }`}
+          >
+            {loading ? "Sending..." : "Send Message"}
+          </button>
+        </form>
+      </div>
     </section>
   );
 };
