@@ -83,7 +83,7 @@ const Hire = () => {
                   required
                 />
                 <span className="font-bold text-white">
-                  Starter — ₦100,000+
+                  Starter — ₦150,000+
                 </span>
                 <span className="absolute top-2 right-3 bg-cyan-600 text-white text-xs font-semibold px-2 py-1 rounded-full">
                   -10%
