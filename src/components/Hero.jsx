@@ -31,7 +31,7 @@ const Hero = () => {
           className="text-3xl md:text-5xl font-extrabold tracking-wide mt-8 text-white leading-tight text-center"
           data-aos="fade-in"
         >
-          Transform Your <span className="text-cyan-400">Vision</span>
+          Transform Your <span className="text-cyan-400">Vision</span> 
           <span className="hidden lg:inline">
             <br />
           </span>
